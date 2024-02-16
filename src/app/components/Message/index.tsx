@@ -1,13 +1,15 @@
 import React from 'react'
 import { MessageType } from '../../types'
 import { styled } from 'styled-components'
-import { userName } from '../Chat'
+import { userData } from '../../store/slices/userSlice'
 
 type Props = {
   message: MessageType
 }
 
 const Message: React.FC<Props> = ({ message }) => {
+  const userName = userData().name
+
   let timeArr = message.date.toLocaleTimeString('ru-RU').split(':')
   timeArr.pop()
   let time = timeArr.join(':')
@@ -35,7 +37,7 @@ const Name = styled.div`
 const Container = styled.div<{ $owner?: boolean }>`
   display: flex;
   flex-direction: column;
-  border: 1px solid;
+  border: 1px solid #b1b1b1;
   border-radius: 10px;
   width: fit-content;
   padding: 5px 10px;

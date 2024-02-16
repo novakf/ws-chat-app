@@ -3,8 +3,14 @@ import styled from 'styled-components'
 import Header from './components/Header'
 import Chat from './components/Chat'
 import MessageInput from './components/MessageInput'
+import { useDispatch } from 'react-redux'
+import { setUserDataAction } from './store/slices/userSlice'
 
 const App: React.FC = () => {
+  const dispatch = useDispatch()
+
+  dispatch(setUserDataAction({ name: 'Бэтмен' }))
+
   return (
     <div>
       <Container>
