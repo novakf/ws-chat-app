@@ -29,6 +29,7 @@ const MessageInput: React.FC = () => {
         onKeyDown={handleOrgEnter}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Напишите сообщение..."
+        autoFocus
       />
       <SPaperPlaneIcon onClick={submit} $disable={!value} />
     </Container>

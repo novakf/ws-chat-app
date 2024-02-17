@@ -46,6 +46,8 @@ const UserInfo = styled.div`
   align-items: center;
   top: 0;
   text-align: right;
+  box-shadow: 0px 15px 20px -5px rgb(0 0 0 / 33%);
+  z-index: 100;
 
   & > div {
     padding: 0 20px;
@@ -66,7 +68,7 @@ const Title = styled.div`
 
 const Container = styled.div`
   height: 70px;
-  border-bottom: 1px solid #cdcdcd;
+  margin-bottom: 4px;
 
   & > div {
     display: flex;
