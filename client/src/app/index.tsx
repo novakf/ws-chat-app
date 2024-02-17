@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Header from './components/Header'
 import Chat from './components/Chat'
 import MessageInput from './components/MessageInput'
 import { userData } from './store/slices/userSlice'
 import LoginForm from './components/Login'
+import { WSconnect } from './websocket'
 
 const App: React.FC = () => {
   const user = userData().name
+
+  const [message, setMessage] = useState('')
+
+  WSconnect(setMessage)
+
+  console.log(message)
 
   return (
     <div>
