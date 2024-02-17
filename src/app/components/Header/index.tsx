@@ -1,8 +1,18 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import MoaiIcon from '../../icons/MoaiIcon'
+import { useDispatch } from 'react-redux'
+import { setUserDataAction, userData } from '../../store/slices/userSlice'
+import ExitIcon from '../../icons/ExitIcon'
 
 const Header: React.FC = () => {
+  const user = userData()
+  const dispatch = useDispatch()
+
+  const exitHandle = () => {
+    dispatch(setUserDataAction({ name: '' }))
+  }
+
   return (
     <Container>
       <div>
@@ -15,13 +25,28 @@ const Header: React.FC = () => {
         </ChatInfo>
         <UserInfo>
           <div>
-            <Name>Бэтмен</Name>
+            <Name>{user.name}</Name>
+            <Exit onClick={exitHandle}>
+              <ExitIcon color="#898989" />
+            </Exit>
           </div>
         </UserInfo>
       </div>
     </Container>
   )
 }
+
+const Exit = styled.button`
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #df0000;
+  cursor: pointer;
+
+  &:hover {
+    color: #9d0000;
+  }
+`
 
 const ChatInfo = styled.div`
   display: flex;
@@ -33,7 +58,7 @@ const ChatInfo = styled.div`
 
 const Name = styled.div`
   font-size: 20px;
-  color: #7d7d7d;
+  color: #454545;
 `
 
 const UserInfo = styled.div`
@@ -51,6 +76,16 @@ const UserInfo = styled.div`
 
   & > div {
     padding: 0 20px;
+    display: flex;
+    gap: 10px;
+
+    svg {
+      &:hover {
+        path:nth-child(2) {
+          fill: #df0000;
+        }
+      }
+    }
   }
 `
 

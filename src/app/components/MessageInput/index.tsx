@@ -3,21 +3,23 @@ import { styled } from 'styled-components'
 import PaperPlaneIcon from '../../icons/PaperPlaneIcon'
 import { useDispatch } from 'react-redux'
 import { setChatDataAction } from '../../store/slices/chatSlice'
+import { userData } from '../../store/slices/userSlice'
 
 const MessageInput: React.FC = () => {
   const [value, setValue] = useState('')
+  const userName = userData().name
 
   const dispatch = useDispatch()
 
   const submit = () => {
-    value && dispatch(setChatDataAction({ sender: 'Бэтмен', content: value, date: new Date() }))
+    value && dispatch(setChatDataAction({ sender: userName, content: value, date: new Date() }))
     setValue('')
   }
 
-  const handleOrgEnter = (event: React.KeyboardEvent) => {
+  const handleEnter = (event: React.KeyboardEvent) => {
     let value = (event.target as HTMLInputElement).value
     if (event.key === 'Enter' && value) {
-      dispatch(setChatDataAction({ sender: 'Бэтмен', content: value, date: new Date() }))
+      dispatch(setChatDataAction({ sender: userName, content: value, date: new Date() }))
       setValue('')
     }
   }
@@ -26,7 +28,7 @@ const MessageInput: React.FC = () => {
     <Container>
       <StyledInput
         value={value}
-        onKeyDown={handleOrgEnter}
+        onKeyDown={handleEnter}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Напишите сообщение..."
         autoFocus
