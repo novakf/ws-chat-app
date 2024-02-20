@@ -1,4 +1,4 @@
-import { setChatDataAction } from '../store/slices/chatSlice'
+import { setChatDataAction, setOnlineCountAction } from '../store/slices/chatSlice'
 import { Dispatch } from '@reduxjs/toolkit'
 
 export const WSConnect = (dispatch: Dispatch, socket?: WebSocket) => {
@@ -9,6 +9,10 @@ export const WSConnect = (dispatch: Dispatch, socket?: WebSocket) => {
   }
 
   socket.onmessage = async (event) => {
+    if (Number(event.data)) {
+      dispatch(setOnlineCountAction(event.data))
+      return
+    }
     let message = JSON.parse(await event.data.text())
     message.date = new Date(message.date)
     message && dispatch(setChatDataAction(message))

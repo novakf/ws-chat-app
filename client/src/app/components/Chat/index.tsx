@@ -66,6 +66,10 @@ const Container = styled.div<{ $empty?: boolean }>`
     width: 100%;
     min-height: 667px;
     justify-content: flex-end;
+
+    @media (max-width: 1100px) {
+      min-height: calc(100vh - 130px);
+    }
   }
 `
 

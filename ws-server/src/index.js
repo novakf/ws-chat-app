@@ -8,6 +8,8 @@ const onConnect = (wsClient) => {
   clients.add(wsClient)
   console.log('Новый пользователь. Онлайн:', clients.size)
 
+  clients.forEach((client) => client.send(clients.size))
+
   wsClient.on('message', (message) => {
     try {
       clients.forEach((client) => client.send(message))
@@ -18,6 +20,7 @@ const onConnect = (wsClient) => {
 
   wsClient.on('close', () => {
     clients.delete(wsClient)
+    clients.forEach((client) => client.send(clients.size))
     console.log('Пользователь вышел из чата. Онлайн:', clients.size)
   })
 }

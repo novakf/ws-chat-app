@@ -31,6 +31,7 @@ const LoginForm: React.FC<Props> = ({ open }) => {
           onKeyDown={handleEnter}
           onChange={(e) => setValue(e.target.value)}
           $error={false}
+          autoFocus
         />
       </Content>
     </GenericModal>

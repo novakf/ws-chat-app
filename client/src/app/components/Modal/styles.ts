@@ -2,7 +2,7 @@ import { styled } from 'styled-components'
 
 export default {
   ModalWrapper: styled.div<{ $open: boolean }>`
-    z-index: 1000000;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15,6 +15,12 @@ export default {
     width: 1100px;
     border-radius: 15px;
 
+    @media (max-width: 1100px) {
+      height: 100vh;
+      border-radius: 0px;
+      width: 100vw;
+    }
+
     ${(props) =>
       props.$open &&
       `
@@ -25,7 +31,7 @@ export default {
   `,
 
   ModalContent: styled.div<{ $open: boolean }>`
-    width: fit-content;
+    max-width: fit-content;
     margin: 0 40px;
     border-radius: 10px;
     background-color: white;

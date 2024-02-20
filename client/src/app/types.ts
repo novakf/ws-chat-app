@@ -10,4 +10,5 @@ export type UserType = {
 
 export type ChatType = {
   history?: MessageType[]
+  online: number
 }

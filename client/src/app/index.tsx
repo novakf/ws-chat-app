@@ -42,6 +42,12 @@ const Container = styled.div`
   border: 1px solid #cdcdcd;
   border-radius: 15px;
   overflow: hidden;
+
+  @media(max-width: 1100px) {
+    height: 100vh;
+    margin: 0;
+    border: none;
+  }
 `
 
 export default App

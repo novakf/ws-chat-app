@@ -1,10 +1,9 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import MoaiIcon from '../../icons/MoaiIcon'
 import { useDispatch } from 'react-redux'
 import { setUserDataAction, userData } from '../../store/slices/userSlice'
 import ExitIcon from '../../icons/ExitIcon'
-import { clearChatHistoryAction } from '../../store/slices/chatSlice'
+import { clearChatHistoryAction, onlineCount } from '../../store/slices/chatSlice'
 
 type Props = {
   socket?: WebSocket
@@ -12,6 +11,7 @@ type Props = {
 
 const Header: React.FC<Props> = ({ socket }) => {
   const user = userData()
+  const online = onlineCount()
   const dispatch = useDispatch()
 
   const exitHandle = () => {
@@ -24,11 +24,8 @@ const Header: React.FC<Props> = ({ socket }) => {
     <Container>
       <div>
         <ChatInfo>
-          <Title>
-            Chad
-            <MoaiIcon />
-          </Title>
-          <Text>3 участника</Text>
+          <Title>Чат</Title>
+          <Text>{online} онлайн</Text>
         </ChatInfo>
         <UserInfo>
           <div>
@@ -98,7 +95,7 @@ const UserInfo = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  color: #818181;
+  color: green;
 `
 
 const Title = styled.div`
