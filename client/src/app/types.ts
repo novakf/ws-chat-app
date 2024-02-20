@@ -2,6 +2,8 @@ export type MessageType = {
   sender: string
   content: string
   date: Date
+  error?: boolean
+  loading?: boolean
 }
 
 export type UserType = {
@@ -9,6 +11,6 @@ export type UserType = {
 }
 
 export type ChatType = {
-  history?: MessageType[]
+  history: MessageType[]
   online: number
 }

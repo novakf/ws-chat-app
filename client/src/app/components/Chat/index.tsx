@@ -3,10 +3,14 @@ import { styled } from 'styled-components'
 import Message from '../Message'
 import { historyData } from '../../store/slices/chatSlice'
 import bg from '../../assets/sky.webp'
+import ErrorIcon from '../../icons/ErrorIcon'
+import { userData } from '../../store/slices/userSlice'
+import Tooltip from '../Tooltip'
+import Loader from '../Loader'
 
 const Chat: React.FC = () => {
   const history = historyData()
-
+  const userName = userData().name
   const chatRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,7 +28,15 @@ const Chat: React.FC = () => {
             ?.sort((a, b) => a.date.getTime() - b.date.getTime())
             .map((message, i) => {
               return (
-                <Message key={message.date.getTime()} message={message} next={history[i + 1]} prev={history[i - 1]} />
+                <ErrorContainer key={message.date.getTime()} $owner={message.sender === userName}>
+                  {message.error && (
+                    <Tooltip title={<div>Ошибка</div>}>
+                      <ErrorIcon />
+                    </Tooltip>
+                  )}
+                  <Message message={message} next={history[i + 1]} prev={history[i - 1]} />
+                  {message.loading && <Loader />}
+                </ErrorContainer>
               )
             })
         ) : (
@@ -34,6 +46,19 @@ const Chat: React.FC = () => {
     </Container>
   )
 }
+
+const ErrorContainer = styled.div<{ $owner: boolean }>`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  ${(props) =>
+    props.$owner &&
+    `
+    margin-left: auto;
+    flex-direction: row-reverse;
+  `}
+`
 
 const Empty = styled.div`
   display: flex;

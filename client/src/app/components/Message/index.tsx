@@ -22,6 +22,7 @@ const Message: React.FC<Props> = ({ message, next, prev }) => {
       $owner={message.sender === userName}
       $repeatNext={message.sender === next?.sender}
       $repeatPrev={message.sender === prev?.sender}
+      $error={message.error}
     >
       {message.sender !== userName && message.sender !== prev?.sender && <Name>{message.sender}</Name>}
       <Content>{message.content}</Content>
@@ -63,7 +64,7 @@ const Name = styled.div`
   color: #4b4b4b;
 `
 
-const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatPrev?: boolean }>`
+const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatPrev?: boolean; $error?: boolean }>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -77,7 +78,6 @@ const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatP
   ${(props) =>
     props.$owner &&
     `
-    margin-left: auto;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 17px;
   `}
@@ -102,6 +102,12 @@ const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatP
       : props.$repeatPrev &&
         `
     border-top-left-radius: 7px;
+  `}
+
+  ${(props) =>
+    props.$error &&
+    `
+    filter: opacity(0.5);
   `}
 `
 

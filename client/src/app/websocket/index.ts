@@ -1,21 +1,48 @@
-import { setChatDataAction, setOnlineCountAction } from '../store/slices/chatSlice'
+import { loadMessageAction, setChatDataAction, setOnlineCountAction } from '../store/slices/chatSlice'
 import { Dispatch } from '@reduxjs/toolkit'
+import { MessageType } from '../types'
 
-export const WSConnect = (dispatch: Dispatch, socket?: WebSocket) => {
+export const WS_HOST = 'ws://localhost:9000'
+
+export const WSConnect = (dispatch: Dispatch, history: MessageType[], socket?: WebSocket) => {
   if (!socket) return
 
   socket.onopen = () => {
     console.log('[open] Соединение установлено')
   }
 
-  socket.onmessage = async (event) => {
+  socket.onmessage = (event) => {
     if (Number(event.data)) {
       dispatch(setOnlineCountAction(event.data))
       return
     }
-    let message = JSON.parse(await event.data.text())
+
+    const { message, sendError, receiveError, loading } = JSON.parse(
+      event.data instanceof Blob ? event.data.text() : event.data
+    )
+
     message.date = new Date(message.date)
-    message && dispatch(setChatDataAction(message))
+
+    const index = history.findIndex(
+      (el) => el.sender === message.sender && el.date.toString() === message.date.toString() && el.loading
+    )
+
+    if (index > -1) {
+      dispatch(loadMessageAction({ index, receiveError, sendError }))
+      return
+    }
+
+    if (sendError) {
+      message && dispatch(setChatDataAction({ ...message, error: true }))
+      return
+    }
+
+    if (receiveError) {
+      message && dispatch(setChatDataAction({ ...message, content: '', error: true }))
+      return
+    }
+
+    message && dispatch(setChatDataAction({ ...message, loading }))
   }
 
   socket.onclose = function (event) {

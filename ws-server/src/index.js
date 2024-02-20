@@ -1,30 +1,59 @@
 import { WebSocketServer } from 'ws'
+import http from 'http'
+import express from 'express'
+import axios from 'axios'
 
-const wsServer = new WebSocketServer({ port: 9000 })
+const WS_PORT = 9000
+const TRANSPORT_LAYER = 'http://localhost:3001/sendMessage'
 
-const clients = new Set()
+const app = express()
+app.use(express.json())
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers')
+  next()
+})
 
-const onConnect = (wsClient) => {
-  clients.add(wsClient)
-  console.log('Новый пользователь. Онлайн:', clients.size)
+const server = http.createServer(app)
+const wsServer = new WebSocketServer({ server })
 
-  clients.forEach((client) => client.send(clients.size))
+wsServer.on('connection', (wsClient) => {
+  wsServer.clients.add(wsClient)
+  //  console.log(`Новый пользователь. Онлайн: ${wsServer.clients.size}`)
+
+  wsServer.clients.forEach((client) => client.send(wsServer.clients.size))
 
   wsClient.on('message', (message) => {
-    try {
-      clients.forEach((client) => client.send(message))
-    } catch (error) {
-      console.log('Ошибка при получении сообщения', error)
-    }
+    //    wsServer.clients.forEach((client) =>
+    //      client.send(JSON.stringify({ message: { ...JSON.parse(message) }, receiveError: false }))
+    //    )
+
+    sendMessage(wsClient, JSON.parse(message))
   })
 
   wsClient.on('close', () => {
-    clients.delete(wsClient)
-    clients.forEach((client) => client.send(clients.size))
-    console.log('Пользователь вышел из чата. Онлайн:', clients.size)
+    wsServer.clients.delete(wsClient)
+    wsServer.clients.forEach((client) => client.send(wsServer.clients.size))
+    //  console.log(`Пользователь вышел из чата. Онлайн: ${wsServer.clients.size}`)
   })
+})
+
+// отправка на транспортный уровень
+const sendMessage = (senderClient, message) => {
+  axios
+    .post(TRANSPORT_LAYER, message)
+    .then(() => {
+      senderClient.send(JSON.stringify({ message, loading: true }))
+    })
+    .catch(() => {
+      senderClient.send(JSON.stringify({ message, sendError: true }))
+    })
 }
 
-wsServer.on('connection', onConnect)
+// получение с транспортного уровня
+app.post('/app/receiveMessage', (req, res) => {
+  wsServer.clients.forEach((client) => client.send(JSON.stringify(req.body))) // body {message: {}, receiveError: bool}
+})
 
-console.log('Сервер запущен на 9000 порту')
+server.listen(WS_PORT, () => console.log('Server started'))

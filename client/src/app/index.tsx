@@ -5,20 +5,22 @@ import Chat from './components/Chat'
 import MessageInput from './components/MessageInput'
 import { userData } from './store/slices/userSlice'
 import LoginForm from './components/Login'
-import { WSConnect } from './websocket'
+import { WSConnect, WS_HOST } from './websocket'
 import { useDispatch } from 'react-redux'
+import { historyData } from './store/slices/chatSlice'
 
 const App: React.FC = () => {
   const user = userData().name
+  const history = historyData()
   const dispatch = useDispatch()
 
   const [socket, setSocket] = useState<WebSocket | undefined>()
 
   useEffect(() => {
-    user && setSocket(new WebSocket('ws://localhost:9000'))
+    user && setSocket(new WebSocket(WS_HOST))
   }, [user])
 
-  WSConnect(dispatch, socket)
+  WSConnect(dispatch, history, socket)
 
   return (
     <div>
@@ -43,7 +45,7 @@ const Container = styled.div`
   border-radius: 15px;
   overflow: hidden;
 
-  @media(max-width: 1100px) {
+  @media (max-width: 1100px) {
     height: 100vh;
     margin: 0;
     border: none;
