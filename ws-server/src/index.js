@@ -48,6 +48,7 @@ const sendMessage = (senderClient, message) => {
     })
     .catch(() => {
       senderClient.send(JSON.stringify({ message, sendError: true }))
+      console.log('Транспортный уровень не найден')
     })
 }
 
