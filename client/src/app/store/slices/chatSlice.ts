@@ -2,10 +2,9 @@ import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 import { ChatType } from '../../types'
-import messagesMock from '../../mocks/messagesMock'
 
 const initialState: ChatType = {
-  history: messagesMock,
+  history: [],
 }
 
 const dataSlice = createSlice({
@@ -15,11 +14,14 @@ const dataSlice = createSlice({
     setNewMessage(state, { payload }) {
       state.Data.history?.push(payload)
     },
+    clearChatHistory(state) {
+      state.Data.history = []
+    },
   },
 })
 
 export const historyData = () => useSelector((state: RootState) => state.chatInfo.Data.history)
 
-export const { setNewMessage: setChatDataAction } = dataSlice.actions
+export const { setNewMessage: setChatDataAction, clearChatHistory: clearChatHistoryAction } = dataSlice.actions
 
 export default dataSlice.reducer

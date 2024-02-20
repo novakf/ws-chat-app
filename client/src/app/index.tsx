@@ -1,28 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Header from './components/Header'
 import Chat from './components/Chat'
 import MessageInput from './components/MessageInput'
 import { userData } from './store/slices/userSlice'
 import LoginForm from './components/Login'
-import { WSconnect } from './websocket'
+import { WSConnect } from './websocket'
+import { useDispatch } from 'react-redux'
 
 const App: React.FC = () => {
   const user = userData().name
+  const dispatch = useDispatch()
 
-  const [message, setMessage] = useState('')
+  const [socket, setSocket] = useState<WebSocket | undefined>()
 
-  WSconnect(setMessage)
+  useEffect(() => {
+    user && setSocket(new WebSocket('ws://localhost:9000'))
+  }, [user])
 
-  console.log(message)
+  WSConnect(dispatch, socket)
 
   return (
     <div>
       <Container>
-        <Header />
+        <Header socket={socket} />
         <Chat />
-        <MessageInput />
-        <LoginForm open={user === ''} onClose={() => {}} />
+        <MessageInput socket={socket} />
+        <LoginForm open={user === ''} />
       </Container>
     </div>
   )

@@ -6,14 +6,9 @@ import { useDispatch } from 'react-redux'
 
 type Props = {
   open: boolean
-  onClose: () => void
 }
 
-const LoginForm: React.FC<Props> = ({ open, onClose }) => {
-  const handleClose = () => {
-    onClose?.()
-  }
-
+const LoginForm: React.FC<Props> = ({ open }) => {
   const [value, setValue] = useState('')
   const dispatch = useDispatch()
 
@@ -26,7 +21,7 @@ const LoginForm: React.FC<Props> = ({ open, onClose }) => {
   }
 
   return (
-    <GenericModal open={open} onClose={handleClose}>
+    <GenericModal open={open} onClose={() => {}}>
       <Content>
         <Title>WS Мессенджер</Title>
 

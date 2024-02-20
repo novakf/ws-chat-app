@@ -2,23 +2,23 @@ import { WebSocketServer } from 'ws'
 
 const wsServer = new WebSocketServer({ port: 9000 })
 
-const onConnect = (wsClient) => {
-  console.log('Новый пользователь')
+const clients = new Set()
 
-  wsClient.send('Привет')
+const onConnect = (wsClient) => {
+  clients.add(wsClient)
+  console.log('Новый пользователь. Онлайн:', clients.size)
 
   wsClient.on('message', (message) => {
     try {
-      const jsonMessage = JSON.parse(message)
-
-      console.log(jsonMessage)
+      clients.forEach((client) => client.send(message))
     } catch (error) {
-      console.log('Ошибка', error)
+      console.log('Ошибка при получении сообщения', error)
     }
   })
 
   wsClient.on('close', () => {
-    console.log('Пользователь отключился')
+    clients.delete(wsClient)
+    console.log('Пользователь вышел из чата. Онлайн:', clients.size)
   })
 }
 

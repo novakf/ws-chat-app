@@ -4,13 +4,20 @@ import MoaiIcon from '../../icons/MoaiIcon'
 import { useDispatch } from 'react-redux'
 import { setUserDataAction, userData } from '../../store/slices/userSlice'
 import ExitIcon from '../../icons/ExitIcon'
+import { clearChatHistoryAction } from '../../store/slices/chatSlice'
 
-const Header: React.FC = () => {
+type Props = {
+  socket?: WebSocket
+}
+
+const Header: React.FC<Props> = ({ socket }) => {
   const user = userData()
   const dispatch = useDispatch()
 
   const exitHandle = () => {
     dispatch(setUserDataAction({ name: '' }))
+    dispatch(clearChatHistoryAction())
+    socket?.close()
   }
 
   return (

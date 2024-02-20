@@ -1,13 +1,17 @@
-export const WSconnect = (setMessage: any) => {
-  let socket = new WebSocket('ws://localhost:9000')
+import { setChatDataAction } from '../store/slices/chatSlice'
+import { Dispatch } from '@reduxjs/toolkit'
+
+export const WSConnect = (dispatch: Dispatch, socket?: WebSocket) => {
+  if (!socket) return
 
   socket.onopen = () => {
     console.log('[open] Соединение установлено')
-    socket.send(JSON.stringify({ message: 'Привет' }))
   }
 
-  socket.onmessage = (event) => {
-    setMessage(event.data)
+  socket.onmessage = async (event) => {
+    let message = JSON.parse(await event.data.text())
+    message.date = new Date(message.date)
+    message && dispatch(setChatDataAction(message))
   }
 
   socket.onclose = function (event) {

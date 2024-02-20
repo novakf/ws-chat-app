@@ -11,7 +11,6 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     if (chatRef?.current && history?.length) {
-      console.log(chatRef.current)
       chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, left: 0, behavior: 'smooth' })
     }
   }, [chatRef, history])
