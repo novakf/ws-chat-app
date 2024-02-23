@@ -1,5 +1,7 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { styled } from 'styled-components'
+import { setSideBarOpenAction } from '../../store/slices/sidebarSlice'
 
 type Props = {
   id: number
@@ -8,8 +10,18 @@ type Props = {
 }
 
 const ChatPreview: React.FC<Props> = (props) => {
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    if (window.innerWidth < 400) {
+      dispatch(setSideBarOpenAction(false))
+    }
+
+    props.setActive(props.id)
+  }
+
   return (
-    <Container $active={props.active} onClick={() => props.setActive(props.id)}>
+    <Container $active={props.active} onClick={handleClick}>
       <div>
         <ImageContainer>
           <Image>О</Image>

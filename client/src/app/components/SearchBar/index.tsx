@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import SearchIcon from '../../icons/SearchIcon'
 import ArrowLeft from '../../icons/ArrowLeft'
+import { setSideBarOpenAction, sideBarOpen } from '../../store/slices/sidebarSlice'
+import { useDispatch } from 'react-redux'
 
-type Props = {
-  showSidebar: boolean
-  setBarWidth: (val: boolean) => void
-}
-
-const SearchBar: React.FC<Props> = ({ showSidebar, setBarWidth }) => {
+const SearchBar: React.FC = () => {
   const [value, setValue] = useState('')
+
+  const dispatch = useDispatch()
+  const showSidebar = sideBarOpen()
 
   const handleEnter = (event: React.KeyboardEvent) => {
     let value = (event.target as HTMLInputElement).value
@@ -28,8 +28,8 @@ const SearchBar: React.FC<Props> = ({ showSidebar, setBarWidth }) => {
       />
       {window.innerWidth > 400 && (
         <Icons $showSide={showSidebar}>
-          <SearchIcon onClick={() => setBarWidth(true)} />
-          <ArrowLeft onClick={() => setBarWidth(false)} />
+          <SearchIcon onClick={() => dispatch(setSideBarOpenAction(true))} />
+          <ArrowLeft onClick={() => dispatch(setSideBarOpenAction(false))} />
         </Icons>
       )}
     </Container>
@@ -89,12 +89,16 @@ const StyledInput = styled.input<{ $error?: boolean; $hide?: boolean }>`
   ${(p) =>
     p.$hide &&
     `
-    @media(max-width: 400px) {
-      display: none;
-    }
     width: 0;
     opacity: 0;
   `}
+
+  @media(max-width: 400px) {
+    ${(p) =>
+      !p.$hide &&
+      `
+    margin-right: 10px;`}
+  }
 `
 
 const Container = styled.div`
@@ -104,6 +108,11 @@ const Container = styled.div`
   height: 74px;
   border-bottom: 1px solid #bdbdbd;
   width: calc(100% + 10px);
+
+  @media (max-width: 400px) {
+    height: 46px;
+    border-bottom: none;
+  }
 `
 
 export default SearchBar

@@ -7,11 +7,13 @@ import ErrorIcon from '../../icons/ErrorIcon'
 import { userData } from '../../store/slices/userSlice'
 import Tooltip from '../Tooltip'
 import Loader from '../Loader'
+import { sideBarOpen } from '../../store/slices/sidebarSlice'
 
 const Chat: React.FC = () => {
   const history = historyData()
   const userName = userData().name
   const chatRef = useRef<HTMLDivElement>(null)
+  const sidebar = sideBarOpen()
 
   useEffect(() => {
     if (chatRef?.current && history?.length) {
@@ -40,7 +42,7 @@ const Chat: React.FC = () => {
               )
             })
         ) : (
-          <Empty>Сообщений нет</Empty>
+          <Empty $hide={sidebar}>Сообщений нет</Empty>
         )}
       </div>
     </Container>
@@ -60,7 +62,7 @@ const ErrorContainer = styled.div<{ $owner: boolean }>`
   `}
 `
 
-const Empty = styled.div`
+const Empty = styled.div<{ $hide?: boolean }>`
   display: flex;
   color: #414141;
   padding: 2px 10px;
@@ -69,6 +71,15 @@ const Empty = styled.div`
   margin: 25px auto;
   border-radius: 15px;
   font-size: 14px;
+  transition: all 0.1s;
+
+  @media (max-width: 400px) {
+    ${(p) =>
+      p.$hide &&
+      `
+      opacity: 0;
+    `}
+  }
 `
 
 const Container = styled.div<{ $empty?: boolean }>`

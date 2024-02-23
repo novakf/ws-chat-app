@@ -5,6 +5,7 @@ import { setUserDataAction, userData } from '../../store/slices/userSlice'
 import ExitIcon from '../../icons/ExitIcon'
 import { clearChatHistoryAction, onlineCount } from '../../store/slices/chatSlice'
 import ArrowRight from '../../icons/ArrowRight'
+import { setSideBarOpenAction, sideBarOpen } from '../../store/slices/sidebarSlice'
 
 type Props = {
   socket?: WebSocket
@@ -14,6 +15,7 @@ const Header: React.FC<Props> = ({ socket }) => {
   const user = userData()
   const online = onlineCount()
   const dispatch = useDispatch()
+  const sidebar = sideBarOpen()
 
   const exitHandle = () => {
     dispatch(setUserDataAction({ name: '' }))
@@ -22,14 +24,14 @@ const Header: React.FC<Props> = ({ socket }) => {
   }
 
   return (
-    <Container>
+    <Container $showSidebar={sidebar}>
       <div>
         <ChatInfo>
           <Title>Чат</Title>
           <Text>{online} онлайн</Text>
         </ChatInfo>
         <UserInfo>
-          {window.innerWidth < 400 && <SArrowRight />}
+          {window.innerWidth < 400 && <SArrowRight onClick={() => dispatch(setSideBarOpenAction(true))} />}
           <div>
             <Name>{user.name}</Name>
             <Exit onClick={exitHandle}>
@@ -118,9 +120,10 @@ const Title = styled.div`
   font-size: 22px;
 `
 
-const Container = styled.div`
+const Container = styled.div<{ $showSidebar: boolean }>`
   height: 70px;
   margin-bottom: 4px;
+  transition: all 0.3s;
 
   & > div {
     display: flex;
@@ -129,6 +132,14 @@ const Container = styled.div`
     position: relative;
     padding: 10px 15px;
     align-items: center;
+  }
+
+  @media (max-width: 400px) {
+    ${(p) =>
+      p.$showSidebar &&
+      `
+      opacity: 0;
+    `}
   }
 `
 

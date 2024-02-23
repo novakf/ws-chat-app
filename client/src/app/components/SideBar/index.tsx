@@ -3,12 +3,15 @@ import { styled } from 'styled-components'
 import SearchBar from '../SearchBar'
 import { barCloseOptions, barOpenOptions } from './styles'
 import ChatPreview from '../ChatPreview'
+import { useDispatch } from 'react-redux'
+import { setSideBarOpenAction, sideBarOpen } from '../../store/slices/sidebarSlice'
 
 const SideBar: React.FC = () => {
   const barRef = useRef<HTMLDivElement | null>(null)
   const resizerRef = useRef<HTMLDivElement | null>(null)
 
-  const [show, setShow] = useState(window.innerWidth > 400 ? true : false)
+  const sideBarShow = sideBarOpen()
+  const dispatch = useDispatch()
 
   const [activeChat, setActiveChat] = useState(1)
 
@@ -26,7 +29,9 @@ const SideBar: React.FC = () => {
 
     const initDrag = (e: MouseEvent) => {
       startX = e.clientX
-      startWidth = Number(el.style.width ? el.style.width.replace('px', '') : 400)
+      if (window.innerWidth > 400)
+        startWidth = Number(el.style.width ? el.style.width.replace('px', '') : sideBarShow ? 400 : 100)
+      else startWidth = Number(el.style.width ? el.style.width.replace('px', '') : sideBarShow ? window.innerWidth : 0)
       window.addEventListener('mousemove', doDrag)
       window.addEventListener('mouseup', stopDrag)
     }
@@ -39,10 +44,10 @@ const SideBar: React.FC = () => {
       el.style.width = width + 'px'
 
       if (width > 120) {
-        setShow(true)
+        dispatch(setSideBarOpenAction(true))
         return
       }
-      if (width < 120) setShow(false)
+      if (width < 120) dispatch(setSideBarOpenAction(false))
     }
 
     const stopDrag = () => {
@@ -60,21 +65,27 @@ const SideBar: React.FC = () => {
     if (!barRef.current) return
 
     const barAnim = barRef.current.animate(...(val ? barOpenOptions : barCloseOptions))
-    if (val) setShow(true)
-    else setShow(false)
+
+    if (val) dispatch(setSideBarOpenAction(true))
+    else dispatch(setSideBarOpenAction(false))
+
     barAnim.addEventListener('finish', () => {
       if (window.innerWidth > 400) barRef.current!.style.width = val ? '400px' : '80px'
       else barRef.current!.style.width = val ? '100vw' : '0px'
+
       barAnim.cancel()
     })
   }
 
-  console.log(show)
+  useEffect(() => {
+    setBarWidth(sideBarShow)
+  }, [sideBarShow])
 
   return (
-    <Container ref={barRef}>
+    <Container ref={barRef} $mobile={window.innerWidth < 400} $show={sideBarShow}>
       <Items>
-        <SearchBar showSidebar={show} setBarWidth={setBarWidth} />
+        {window.innerWidth < 400 && <Title $hide={!sideBarShow}>Чаты</Title>}
+        <SearchBar />
         <ChatPreview active={activeChat === 1} setActive={setActiveChat} id={1} />
         <ChatPreview active={activeChat === 2} setActive={setActiveChat} id={2} />
         <ChatPreview active={activeChat === 3} setActive={setActiveChat} id={3} />
@@ -83,6 +94,28 @@ const SideBar: React.FC = () => {
     </Container>
   )
 }
+
+const Title = styled.div<{ $hide: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+  height: 74px;
+  border-bottom: 1px solid #bdbdbd;
+  width: calc(100% + 10px);
+  font-size: 28px;
+  background: linear-gradient(135deg, #1f6ed1 20%, #fa0ee6 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  @media (max-width: 400px) {
+    ${(p) =>
+      p.$hide &&
+      `
+      opacity: 0;
+    `}
+  }
+`
 
 const ResizeLine = styled.div`
   height: 100%;
@@ -99,7 +132,7 @@ const Items = styled.div`
   width: 100%;
 `
 
-const Container = styled.div`
+const Container = styled.div<{ $mobile: boolean; $show: boolean }>`
   display: flex;
   min-width: 80px;
   max-width: 400px;
@@ -107,7 +140,7 @@ const Container = styled.div`
 
   @media (max-width: 400px) {
     min-width: 0px;
-    max-width: 100vwpx;
+    max-width: 100vw;
     width: 0px;
   }
 `

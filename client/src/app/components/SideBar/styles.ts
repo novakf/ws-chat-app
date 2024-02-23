@@ -1,5 +1,5 @@
 export const barOpenOptions: [Keyframe[], KeyframeAnimationOptions] = [
-  [{ width: '400px' }],
+  [{ width: window.innerWidth > 400 ? '400px' : '100vw' }],
   {
     duration: 300,
     fill: 'forwards',
@@ -7,9 +7,9 @@ export const barOpenOptions: [Keyframe[], KeyframeAnimationOptions] = [
 ]
 
 export const barCloseOptions: [Keyframe[], KeyframeAnimationOptions] = [
-  [{ width: '80px' }],
+  [{ width: window.innerWidth > 400 ? '80px' : '0px' }],
   {
-    duration: 150,
+    duration: 200,
     fill: 'forwards',
   },
 ]

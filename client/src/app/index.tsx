@@ -9,11 +9,14 @@ import { WSConnect, WS_HOST } from './websocket'
 import { useDispatch } from 'react-redux'
 import { historyData } from './store/slices/chatSlice'
 import SideBar from './components/SideBar'
+import { sideBarOpen } from './store/slices/sidebarSlice'
 
 const App: React.FC = () => {
   const user = userData().name
   const history = historyData()
   const dispatch = useDispatch()
+
+  const sidebar = sideBarOpen()
 
   const [socket, setSocket] = useState<WebSocket | undefined>()
 
@@ -26,12 +29,12 @@ const App: React.FC = () => {
   return (
     <Wrapper>
       <SideBar />
-      <ChatContainer>
+      <ChatContainer $mobile={window.innerWidth < 400} $sidebarShow={sidebar}>
         <Header socket={socket} />
         <Chat />
         <MessageInput socket={socket} />
-        <LoginForm open={user === ''} />
       </ChatContainer>
+      <LoginForm open={user === ''} />
     </Wrapper>
   )
 }
@@ -50,14 +53,27 @@ const Wrapper = styled.div`
     margin: 0;
     border: none;
   }
+
+  @media (max-width: 400px) {
+    border-radius: 0px;
+  }
 `
 
-const ChatContainer = styled.div`
+const ChatContainer = styled.div<{ $mobile: boolean; $sidebarShow: boolean }>`
   display: flex;
   position: relative;
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  transition: all 0.3s;
+  margin-left: auto;
+
+  ${(p) =>
+    p.$mobile &&
+    p.$sidebarShow &&
+    `
+    width: 0;
+  `}
 `
 
 export default App
