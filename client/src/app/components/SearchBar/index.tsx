@@ -26,10 +26,12 @@ const SearchBar: React.FC<Props> = ({ showSidebar, setBarWidth }) => {
         onKeyDown={handleEnter}
         $hide={!showSidebar}
       />
-      <Icons $showSide={showSidebar}>
-        <SearchIcon onClick={() => setBarWidth(true)} />
-        <ArrowLeft onClick={() => setBarWidth(false)} />
-      </Icons>
+      {window.innerWidth > 400 && (
+        <Icons $showSide={showSidebar}>
+          <SearchIcon onClick={() => setBarWidth(true)} />
+          <ArrowLeft onClick={() => setBarWidth(false)} />
+        </Icons>
+      )}
     </Container>
   )
 }
@@ -87,6 +89,9 @@ const StyledInput = styled.input<{ $error?: boolean; $hide?: boolean }>`
   ${(p) =>
     p.$hide &&
     `
+    @media(max-width: 400px) {
+      display: none;
+    }
     width: 0;
     opacity: 0;
   `}

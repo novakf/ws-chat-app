@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setUserDataAction, userData } from '../../store/slices/userSlice'
 import ExitIcon from '../../icons/ExitIcon'
 import { clearChatHistoryAction, onlineCount } from '../../store/slices/chatSlice'
+import ArrowRight from '../../icons/ArrowRight'
 
 type Props = {
   socket?: WebSocket
@@ -28,6 +29,7 @@ const Header: React.FC<Props> = ({ socket }) => {
           <Text>{online} онлайн</Text>
         </ChatInfo>
         <UserInfo>
+          {window.innerWidth < 400 && <SArrowRight />}
           <div>
             <Name>{user.name}</Name>
             <Exit onClick={exitHandle}>
@@ -39,6 +41,17 @@ const Header: React.FC<Props> = ({ socket }) => {
     </Container>
   )
 }
+
+const SArrowRight = styled(ArrowRight)`
+  margin-right: auto;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+`
 
 const Exit = styled.button`
   background: transparent;
@@ -115,6 +128,7 @@ const Container = styled.div`
     margin: 0 auto;
     position: relative;
     padding: 10px 15px;
+    align-items: center;
   }
 `
 

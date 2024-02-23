@@ -57,6 +57,7 @@ const StyledInput = styled.input<{ $error?: boolean }>`
 `
 
 const Title = styled.div`
+  text-align: center;
   font-size: 28px;
   background: linear-gradient(135deg, #1f6ed1 20%, #fa0ee6 70%);
   -webkit-background-clip: text;

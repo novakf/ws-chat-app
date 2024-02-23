@@ -8,14 +8,14 @@ const SideBar: React.FC = () => {
   const barRef = useRef<HTMLDivElement | null>(null)
   const resizerRef = useRef<HTMLDivElement | null>(null)
 
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(window.innerWidth > 400 ? true : false)
 
   const [activeChat, setActiveChat] = useState(1)
 
   let startX: number, startWidth: number
 
   useEffect(() => {
-    if (!barRef.current || !resizerRef.current) return
+    if (!barRef.current || !resizerRef.current || window.innerWidth < 400) return
 
     const el = barRef.current as HTMLDivElement
     const resizer = resizerRef.current as HTMLDivElement
@@ -63,10 +63,13 @@ const SideBar: React.FC = () => {
     if (val) setShow(true)
     else setShow(false)
     barAnim.addEventListener('finish', () => {
-      barRef.current!.style.width = val ? '400px' : '80px'
+      if (window.innerWidth > 400) barRef.current!.style.width = val ? '400px' : '80px'
+      else barRef.current!.style.width = val ? '100vw' : '0px'
       barAnim.cancel()
     })
   }
+
+  console.log(show)
 
   return (
     <Container ref={barRef}>
@@ -101,6 +104,12 @@ const Container = styled.div`
   min-width: 80px;
   max-width: 400px;
   width: 400px;
+
+  @media (max-width: 400px) {
+    min-width: 0px;
+    max-width: 100vwpx;
+    width: 0px;
+  }
 `
 
 export default SideBar
