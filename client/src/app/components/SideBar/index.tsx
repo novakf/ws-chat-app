@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { styled } from 'styled-components'
 import SearchBar from '../SearchBar'
 import { barCloseOptions, barOpenOptions } from './styles'
 import ChatPreview from '../ChatPreview'
 import { useDispatch } from 'react-redux'
 import { setSideBarOpenAction, sideBarOpen } from '../../store/slices/sidebarSlice'
+import Styled from './styles'
 
 const SideBar: React.FC = () => {
   const barRef = useRef<HTMLDivElement | null>(null)
@@ -61,88 +61,38 @@ const SideBar: React.FC = () => {
     return () => el.removeEventListener('mouseover', init)
   }, [barRef, resizerRef])
 
-  const setBarWidth = (val: boolean) => {
+  const setBarWidth = () => {
     if (!barRef.current) return
 
-    const barAnim = barRef.current.animate(...(val ? barOpenOptions : barCloseOptions))
+    const barAnim = barRef.current.animate(...(sideBarShow ? barOpenOptions : barCloseOptions))
 
-    if (val) dispatch(setSideBarOpenAction(true))
+    if (sideBarShow) dispatch(setSideBarOpenAction(true))
     else dispatch(setSideBarOpenAction(false))
 
     barAnim.addEventListener('finish', () => {
-      if (window.innerWidth > 400) barRef.current!.style.width = val ? '400px' : '80px'
-      else barRef.current!.style.width = val ? '100vw' : '0px'
+      if (window.innerWidth > 400) barRef.current!.style.width = sideBarShow ? '400px' : '80px'
+      else barRef.current!.style.width = sideBarShow ? '100vw' : '0px'
 
       barAnim.cancel()
     })
   }
 
   useEffect(() => {
-    setBarWidth(sideBarShow)
+    setBarWidth()
   }, [sideBarShow])
 
   return (
-    <Container ref={barRef} $mobile={window.innerWidth < 400} $show={sideBarShow}>
-      <Items>
-        {window.innerWidth < 400 && <Title $hide={!sideBarShow}>Чаты</Title>}
+    <Styled.Container ref={barRef} $mobile={window.innerWidth < 400} $show={sideBarShow}>
+      <Styled.Items>
+        {window.innerWidth < 400 && <Styled.Title $hide={!sideBarShow}>Чаты</Styled.Title>}
         <SearchBar />
         <ChatPreview active={activeChat === 1} setActive={setActiveChat} id={1} />
         <ChatPreview active={activeChat === 2} setActive={setActiveChat} id={2} />
         <ChatPreview active={activeChat === 3} setActive={setActiveChat} id={3} />
-      </Items>
-      <ResizeLine ref={resizerRef} />
-    </Container>
+      </Styled.Items>
+      <Styled.ResizeLine ref={resizerRef} />
+    </Styled.Container>
   )
 }
-
-const Title = styled.div<{ $hide: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s;
-  height: 74px;
-  border-bottom: 1px solid #bdbdbd;
-  width: calc(100% + 10px);
-  font-size: 28px;
-  background: linear-gradient(135deg, #1f6ed1 20%, #fa0ee6 70%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  @media (max-width: 400px) {
-    ${(p) =>
-      p.$hide &&
-      `
-      opacity: 0;
-    `}
-  }
-`
-
-const ResizeLine = styled.div`
-  height: 100%;
-  width: 20px;
-  margin-right: -10px;
-  background: transparent;
-  cursor: col-resize;
-  z-index: 100;
-`
-
-const Items = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`
-
-const Container = styled.div<{ $mobile: boolean; $show: boolean }>`
-  display: flex;
-  min-width: 80px;
-  max-width: 400px;
-  width: 400px;
-
-  @media (max-width: 400px) {
-    min-width: 0px;
-    max-width: 100vw;
-    width: 0px;
-  }
-`
 
 export default SideBar

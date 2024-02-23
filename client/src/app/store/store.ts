@@ -10,13 +10,13 @@ const persistConfig = {
   storage,
 }
 
-const persistSidebarConfig = {
-  key: 'sidebarInfo',
-  storage,
-}
+// const persistSidebarConfig = {
+//   key: 'sidebarInfo',
+//   storage,
+// }
+// const persistedSideBarReducer = persistReducer(persistSidebarConfig, sidebarReducer)
 
 const persistedReducer = persistReducer(persistConfig, userReducer)
-const persistedSideBarReducer = persistReducer(persistSidebarConfig, sidebarReducer)
 
 const rootReducer = combineReducers({
   userInfo: persistedReducer,
