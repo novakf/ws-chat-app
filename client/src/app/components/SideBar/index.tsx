@@ -1,12 +1,15 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import SearchBar from '../SearchBar'
+import { barCloseOptions, barOpenOptions } from './styles'
 
 const SideBar: React.FC = () => {
-  const barRef = useRef(null)
-  const resizerRef = useRef(null)
+  const barRef = useRef<HTMLDivElement | null>(null)
+  const resizerRef = useRef<HTMLDivElement | null>(null)
 
-  let startX: number, startY: number, startWidth: number, startHeight: number
+  const [show, setShow] = useState(false)
+
+  let startX: number, startWidth: number
 
   useEffect(() => {
     if (!barRef.current || !resizerRef.current) return
@@ -20,21 +23,28 @@ const SideBar: React.FC = () => {
 
     const initDrag = (e: MouseEvent) => {
       startX = e.clientX
-      startY = e.clientY
-      startWidth = parseInt(document.defaultView!.getComputedStyle(el).width, 10)
-      startHeight = parseInt(document.defaultView!.getComputedStyle(el).height, 10)
-      document.documentElement.addEventListener('mousemove', doDrag, false)
-      document.documentElement.addEventListener('mouseup', stopDrag, false)
+      startWidth = Number(el.style.width ? el.style.width.replace('px', '') : 100)
+      window.addEventListener('mousemove', doDrag)
+      window.addEventListener('mouseup', stopDrag)
     }
 
     const doDrag = (e: MouseEvent) => {
-      el.style.width = startWidth + e.clientX - startX + 'px'
-      el.style.height = startHeight + e.clientY - startY + 'px'
+      e.preventDefault()
+      let width = startWidth + 1.7 * (e.clientX - startX)
+      if (width < 80) width = 80
+      if (width > 400) width = 400
+      el.style.width = width + 'px'
+
+      if (width > 120 && !show) {
+        setShow(true)
+        return
+      }
+      if (width < 120 && !show) setShow(false)
     }
 
-    const stopDrag = (e: MouseEvent) => {
-      document.documentElement.removeEventListener('mousemove', doDrag, false)
-      document.documentElement.removeEventListener('mouseup', stopDrag, false)
+    const stopDrag = () => {
+      window.removeEventListener('mousemove', doDrag)
+      window.removeEventListener('mouseup', stopDrag)
       resizer.removeEventListener('mousedown', initDrag)
     }
 
@@ -43,10 +53,22 @@ const SideBar: React.FC = () => {
     return () => el.removeEventListener('mouseover', init)
   }, [barRef, resizerRef])
 
+  const setBarWidth = (val: boolean) => {
+    if (!barRef.current) return
+
+    const barAnim = barRef.current.animate(...(val ? barOpenOptions : barCloseOptions))
+    if (val) setShow(true)
+    else setShow(false)
+    barAnim.addEventListener('finish', () => {
+      barRef.current!.style.width = val ? '400px' : '80px'
+      barAnim.cancel()
+    })
+  }
+
   return (
     <Container ref={barRef}>
       <Items>
-        <SearchBar />
+        <SearchBar showSidebar={show} setBarWidth={setBarWidth} />
         <Item></Item>
         <Item></Item>
       </Items>
@@ -76,8 +98,9 @@ const Item = styled.div`
 
 const Container = styled.div`
   display: flex;
-  max-width: 350px;
-  min-width: 100px;
+  min-width: 80px;
+  max-width: 400px;
+  width: 80px;
 `
 
 export default SideBar
