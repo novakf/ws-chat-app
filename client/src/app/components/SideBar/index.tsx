@@ -43,11 +43,11 @@ const SideBar: React.FC = () => {
       if (width > 400) width = 400
       el.style.width = width + 'px'
 
-      if (width > 120) {
+      if (width > 390) {
         dispatch(setSideBarOpenAction(true))
         return
       }
-      if (width < 120) dispatch(setSideBarOpenAction(false))
+      if (width < 110) dispatch(setSideBarOpenAction(false))
     }
 
     const stopDrag = () => {
