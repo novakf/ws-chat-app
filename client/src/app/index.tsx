@@ -8,6 +8,7 @@ import LoginForm from './components/Login'
 import { WSConnect, WS_HOST } from './websocket'
 import { useDispatch } from 'react-redux'
 import { historyData } from './store/slices/chatSlice'
+import SideBar from './components/SideBar'
 
 const App: React.FC = () => {
   const user = userData().name
@@ -23,21 +24,20 @@ const App: React.FC = () => {
   WSConnect(dispatch, history, socket)
 
   return (
-    <div>
-      <Container>
+    <Wrapper>
+      <SideBar />
+      <ChatContainer>
         <Header socket={socket} />
         <Chat />
         <MessageInput socket={socket} />
         <LoginForm open={user === ''} />
-      </Container>
-    </div>
+      </ChatContainer>
+    </Wrapper>
   )
 }
 
-const Container = styled.div`
+const Wrapper = styled.div`
   display: flex;
-  position: relative;
-  flex-direction: column;
   max-width: 1100px;
   height: 800px;
   margin: 50px auto 0 auto;
@@ -50,6 +50,14 @@ const Container = styled.div`
     margin: 0;
     border: none;
   }
+`
+
+const ChatContainer = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
 `
 
 export default App
