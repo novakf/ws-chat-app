@@ -76,6 +76,7 @@ const Container = styled.div`
   height: 50px;
   padding: 10px 30px;
   border-top: 1px solid #cdcdcd;
+  border-left: 1px solid #cdcdcd;
 `
 
 export default MessageInput

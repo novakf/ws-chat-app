@@ -11,12 +11,19 @@ type Props = {
 const SearchBar: React.FC<Props> = ({ showSidebar, setBarWidth }) => {
   const [value, setValue] = useState('')
 
+  const handleEnter = (event: React.KeyboardEvent) => {
+    let value = (event.target as HTMLInputElement).value
+    if (event.key === 'Enter' && value) {
+    }
+  }
+
   return (
     <Container>
       <StyledInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Поиск чата"
+        onKeyDown={handleEnter}
         $hide={!showSidebar}
       />
       <Icons $showSide={showSidebar}>
@@ -33,7 +40,6 @@ const Icons = styled.div<{ $showSide: boolean }>`
 
   svg:nth-child(1) {
     cursor: pointer;
-    margin-left: -5px;
     opacity: 1;
     transition: all 0.3s;
     &:hover {
@@ -50,6 +56,7 @@ const Icons = styled.div<{ $showSide: boolean }>`
     cursor: pointer;
     opacity: 0;
     transition: all 0.3s;
+    margin-right: 10px;
     &:hover {
       transform: scale(1.2);
     }
@@ -64,17 +71,17 @@ const Icons = styled.div<{ $showSide: boolean }>`
 const StyledInput = styled.input<{ $error?: boolean; $hide?: boolean }>`
   border: 1px solid #dddddd;
   outline: none;
-  border-radius: 10px;
+  border-radius: 15px;
   width: 100%;
-  padding: 2px 6px;
+  padding: 2px 10px;
   font-size: 16px;
   transition: all 0.3s;
   height: 30px;
-  margin: 0 10px;
+  margin-left: 10px;
   opacity: 1;
 
   &:focus {
-    border: 1px solid #898989 !important;
+    border: 1px solid #3600b9 !important;
   }
 
   ${(p) =>
@@ -91,7 +98,7 @@ const Container = styled.div`
   position: relative;
   height: 74px;
   border-bottom: 1px solid #bdbdbd;
-  width: 100%;
+  width: calc(100% + 10px);
 `
 
 export default SearchBar

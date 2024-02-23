@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import SearchBar from '../SearchBar'
 import { barCloseOptions, barOpenOptions } from './styles'
+import ChatPreview from '../ChatPreview'
 
 const SideBar: React.FC = () => {
   const barRef = useRef<HTMLDivElement | null>(null)
   const resizerRef = useRef<HTMLDivElement | null>(null)
 
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(true)
+
+  const [activeChat, setActiveChat] = useState(1)
 
   let startX: number, startWidth: number
 
@@ -23,7 +26,7 @@ const SideBar: React.FC = () => {
 
     const initDrag = (e: MouseEvent) => {
       startX = e.clientX
-      startWidth = Number(el.style.width ? el.style.width.replace('px', '') : 100)
+      startWidth = Number(el.style.width ? el.style.width.replace('px', '') : 400)
       window.addEventListener('mousemove', doDrag)
       window.addEventListener('mouseup', stopDrag)
     }
@@ -35,11 +38,11 @@ const SideBar: React.FC = () => {
       if (width > 400) width = 400
       el.style.width = width + 'px'
 
-      if (width > 120 && !show) {
+      if (width > 120) {
         setShow(true)
         return
       }
-      if (width < 120 && !show) setShow(false)
+      if (width < 120) setShow(false)
     }
 
     const stopDrag = () => {
@@ -69,8 +72,9 @@ const SideBar: React.FC = () => {
     <Container ref={barRef}>
       <Items>
         <SearchBar showSidebar={show} setBarWidth={setBarWidth} />
-        <Item></Item>
-        <Item></Item>
+        <ChatPreview active={activeChat === 1} setActive={setActiveChat} id={1} />
+        <ChatPreview active={activeChat === 2} setActive={setActiveChat} id={2} />
+        <ChatPreview active={activeChat === 3} setActive={setActiveChat} id={3} />
       </Items>
       <ResizeLine ref={resizerRef} />
     </Container>
@@ -92,15 +96,11 @@ const Items = styled.div`
   width: 100%;
 `
 
-const Item = styled.div`
-  height: 74px;
-`
-
 const Container = styled.div`
   display: flex;
   min-width: 80px;
   max-width: 400px;
-  width: 80px;
+  width: 400px;
 `
 
 export default SideBar
