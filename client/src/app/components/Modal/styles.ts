@@ -40,5 +40,9 @@ export default {
     padding: 35px;
 
     ${(props) => props.$open && 'transform: scale(1);'}
+
+    @media(max-width: 400px) {
+      width: 70%;
+    }
   `,
 }
