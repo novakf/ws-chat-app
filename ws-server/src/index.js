@@ -3,7 +3,7 @@ import http from 'http'
 import express from 'express'
 import axios from 'axios'
 
-const WS_PORT = 9000
+const WS_PORT = 3001
 const TRANSPORT_LAYER = 'http://localhost:3001/sendMessage'
 
 const app = express()
@@ -22,12 +22,17 @@ wsServer.on('connection', (wsClient) => {
   wsServer.clients.add(wsClient)
   //  console.log(`Новый пользователь. Онлайн: ${wsServer.clients.size}`)
 
-  wsServer.clients.forEach((client) => client.send(wsServer.clients.size))
+  wsServer.clients.forEach((client) => {
+    client.send(wsServer.clients.size)
+    console.log(wsServer.clients.entries())
+  })
 
   wsClient.on('message', (message) => {
     //    wsServer.clients.forEach((client) =>
     //      client.send(JSON.stringify({ message: { ...JSON.parse(message) }, receiveError: false }))
     //    )
+
+    console.log(wsServer.clients.keys)
 
     sendMessage(wsClient, JSON.parse(message))
   })
@@ -53,7 +58,7 @@ const sendMessage = (senderClient, message) => {
 }
 
 // получение с транспортного уровня
-app.post('/app/receiveMessage', (req, res) => {
+app.post('/receive', (req, res) => {
   wsServer.clients.forEach((client) => client.send(JSON.stringify(req.body))) // body {message: {}, receiveError: bool}
 })
 

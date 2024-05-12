@@ -17,5 +17,5 @@ services:
       context: ws-server
       dockerfile: ./Dockerfile
     ports:
-      - 9000:9000
+      - 3001:3001
     network_mode: "host"

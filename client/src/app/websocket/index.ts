@@ -2,7 +2,7 @@ import { loadMessageAction, setChatDataAction, setOnlineCountAction } from '../s
 import { Dispatch } from '@reduxjs/toolkit'
 import { MessageType } from '../types'
 
-export const WS_HOST = 'ws://localhost:9000'
+export const WS_HOST = 'ws://localhost:3001'
 
 export const WSConnect = (dispatch: Dispatch, history: MessageType[], socket?: WebSocket) => {
   if (!socket) return
