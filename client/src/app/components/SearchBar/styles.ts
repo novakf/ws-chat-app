@@ -75,8 +75,12 @@ export default {
     width: calc(100% + 10px);
 
     @media (max-width: 400px) {
-      height: 46px;
+      height: 50px;
       border-bottom: none;
+      input {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
     }
   `,
 }
