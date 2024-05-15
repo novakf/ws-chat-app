@@ -75,7 +75,7 @@ const UserInfo = styled.div`
   align-items: center;
   top: 0;
   text-align: right;
-  box-shadow: 0px 15px 20px -5px rgb(0 0 0 / 33%);
+  box-shadow: 0px 15px 20px -15px rgb(0 0 0 / 33%);
   z-index: 100;
 
   & > div {

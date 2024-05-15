@@ -64,7 +64,7 @@ const Empty = styled.div`
   display: flex;
   color: #414141;
   padding: 2px 10px;
-  background: #fff;
+  background: #efefef;
   width: fit-content;
   margin: 25px auto;
   border-radius: 15px;
@@ -74,8 +74,6 @@ const Empty = styled.div`
 const Container = styled.div<{ $empty?: boolean }>`
   display: flex;
   height: 100%;
-  background: url('${bg}');
-  background-repeat: round;
   overflow: auto;
 
   &::-webkit-scrollbar {

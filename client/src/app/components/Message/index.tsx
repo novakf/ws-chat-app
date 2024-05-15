@@ -38,7 +38,6 @@ const StyledCornerIcon = styled(CornerIcon)<{ $owner?: boolean }>`
   left: -9px;
   width: 10px;
   height: 20px;
-  font-size: 14px;
 
   ${(props) =>
     props.$owner &&
@@ -56,7 +55,7 @@ const SendDate = styled.div`
 `
 
 const Content = styled.div`
-  font-size: 14px;
+  font-size: 16px;
 `
 
 const Name = styled.div`
@@ -72,8 +71,8 @@ const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatP
   border-radius: 17px;
   border-bottom-left-radius: 0;
   width: fit-content;
-  padding: 5px 10px;
-  background: #fff;
+  padding: 16px 20px;
+  background: #f2f2f2;
 
   ${(props) =>
     props.$owner &&

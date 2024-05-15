@@ -23,7 +23,7 @@ const LoginForm: React.FC<Props> = ({ open }) => {
   return (
     <GenericModal open={open} onClose={() => {}}>
       <Content>
-        <Title>WS Мессенджер</Title>
+        <Title>Вход</Title>
 
         <StyledInput
           placeholder="Введите имя"
@@ -50,7 +50,7 @@ const StyledInput = styled.input<{ $error?: boolean }>`
   height: 30px;
 
   &:focus {
-    border-bottom: 2px solid #8700db;
+    border-bottom: 2px solid #000;
   }
 
   ${(p) => p.$error && `border-bottom: 2px solid #ff000082;`}
@@ -58,14 +58,9 @@ const StyledInput = styled.input<{ $error?: boolean }>`
 
 const Title = styled.div`
   font-size: 28px;
-  background: linear-gradient(135deg, #1f6ed1 20%, #fa0ee6 70%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   display: inline-block;
   padding: 0.3em 0.6em;
   border: 3px solid transparent;
-  border-image: linear-gradient(135deg, #1f6ed1 20%, #bd72c5 70%);
-  border-image-slice: 1;
 `
 
 const Content = styled.div`
