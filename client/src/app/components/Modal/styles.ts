@@ -25,7 +25,7 @@ export default {
       props.$open &&
       `
       opacity: 1;
-      backdrop-filter: blur(20px) opacity(1);
+      backdrop-filter: blur(6px) opacity(1);
       pointer-events: all;
   `}
   `,

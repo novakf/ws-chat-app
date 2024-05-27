@@ -24,8 +24,8 @@ const Message: React.FC<Props> = ({ message, next, prev }) => {
       $repeatPrev={message.sender === prev?.sender}
       $error={message.error}
     >
-      {message.sender !== userName && message.sender !== prev?.sender && <Name>{message.sender}</Name>}
-      <Content>{message.content}</Content>
+      {message.sender !== userName && message.sender !== prev?.sender ? <Name>{message.sender}</Name> : <Name>Вы</Name>}
+      <Content>{message.content || 'Сообщение недоступно'}</Content>
       <SendDate>{time}</SendDate>
       {message.sender !== next?.sender && <StyledCornerIcon $owner={message.sender === userName} />}
     </Container>
@@ -34,17 +34,17 @@ const Message: React.FC<Props> = ({ message, next, prev }) => {
 
 const StyledCornerIcon = styled(CornerIcon)<{ $owner?: boolean }>`
   position: absolute;
-  top: calc(100% - 1.03rem);
   left: -9px;
   width: 10px;
   height: 20px;
+  bottom: -3px;
 
   ${(props) =>
     props.$owner &&
     `
     transform: scale(-1, 1);
     left: auto;
-    right: -10px;
+    right: -9px;
   `}
 `
 
@@ -72,7 +72,7 @@ const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatP
   border-bottom-left-radius: 0;
   width: fit-content;
   padding: 16px 20px;
-  background: #f2f2f2;
+  background: #e9e9e9;
 
   ${(props) =>
     props.$owner &&
@@ -107,6 +107,7 @@ const Container = styled.div<{ $owner?: boolean; $repeatNext?: boolean; $repeatP
     props.$error &&
     `
     filter: opacity(0.5);
+    margin: 4px 0;
   `}
 `
 

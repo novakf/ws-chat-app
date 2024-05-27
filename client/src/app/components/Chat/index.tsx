@@ -2,10 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import { styled } from 'styled-components'
 import Message from '../Message'
 import { historyData } from '../../store/slices/chatSlice'
-import bg from '../../assets/sky.webp'
 import ErrorIcon from '../../icons/ErrorIcon'
 import { userData } from '../../store/slices/userSlice'
-import Tooltip from '../Tooltip'
 import Loader from '../Loader'
 
 const Chat: React.FC = () => {
@@ -29,11 +27,7 @@ const Chat: React.FC = () => {
             .map((message, i) => {
               return (
                 <ErrorContainer key={message.date.getTime()} $owner={message.sender === userName}>
-                  {message.error && (
-                    <Tooltip title={<div>Ошибка</div>}>
-                      <ErrorIcon />
-                    </Tooltip>
-                  )}
+                  {message.error && <ErrorIcon />}
                   <Message message={message} next={history[i + 1]} prev={history[i - 1]} />
                   {message.loading && <Loader />}
                 </ErrorContainer>

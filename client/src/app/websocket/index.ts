@@ -17,9 +17,13 @@ export const WSConnect = (dispatch: Dispatch, history: MessageType[], socket?: W
       return
     }
 
-    const { message, sendError, receiveError, loading } = JSON.parse(
-      event.data instanceof Blob ? event.data.text() : event.data
-    )
+    if (!event?.data) {
+      return
+    }
+
+    const data = JSON.parse(event.data instanceof Blob ? event.data.text() : event.data)
+
+    const { sendError, isError, loading, ...message } = data
 
     message.date = new Date(message.date)
 
@@ -28,7 +32,7 @@ export const WSConnect = (dispatch: Dispatch, history: MessageType[], socket?: W
     )
 
     if (index > -1) {
-      dispatch(loadMessageAction({ index, receiveError, sendError }))
+      dispatch(loadMessageAction({ index, isError, sendError }))
       return
     }
 
@@ -37,7 +41,7 @@ export const WSConnect = (dispatch: Dispatch, history: MessageType[], socket?: W
       return
     }
 
-    if (receiveError) {
+    if (isError) {
       message && dispatch(setChatDataAction({ ...message, content: '', error: true }))
       return
     }

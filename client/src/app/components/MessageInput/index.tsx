@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import PaperPlaneIcon from '../../icons/PaperPlaneIcon'
 import { userData } from '../../store/slices/userSlice'
+import { useDispatch } from 'react-redux'
+import { setChatDataAction } from '../../store/slices/chatSlice'
 
 type Props = {
   socket?: WebSocket
@@ -11,14 +13,20 @@ const MessageInput: React.FC<Props> = ({ socket }) => {
   const [value, setValue] = useState('')
   const userName = userData().name
 
+  const dispatch = useDispatch()
+
   const submit = () => {
-    value && socket?.send(JSON.stringify({ sender: userName, content: value, date: new Date() }))
+    if (!value) return
+
+    dispatch(setChatDataAction({ sender: userName, content: value, date: new Date(), loading: false }))
+    socket?.send(JSON.stringify({ sender: userName, content: value, date: new Date() }))
     setValue('')
   }
 
   const handleEnter = (event: React.KeyboardEvent) => {
     let value = (event.target as HTMLInputElement).value
     if (event.key === 'Enter' && value) {
+      dispatch(setChatDataAction({ sender: userName, content: value, date: new Date(), loading: false }))
       socket?.send(JSON.stringify({ sender: userName, content: value, date: new Date() }))
       setValue('')
     }

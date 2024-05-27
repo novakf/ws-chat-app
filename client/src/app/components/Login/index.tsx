@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GenericModal from '../Modal'
 import { styled } from 'styled-components'
 import { setUserDataAction } from '../../store/slices/userSlice'
@@ -12,6 +12,8 @@ const LoginForm: React.FC<Props> = ({ open }) => {
   const [value, setValue] = useState('')
   const dispatch = useDispatch()
 
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
+
   const handleEnter = (event: React.KeyboardEvent) => {
     let value = (event.target as HTMLInputElement).value
     if (event.key === 'Enter' && value) {
@@ -19,6 +21,14 @@ const LoginForm: React.FC<Props> = ({ open }) => {
       setValue('')
     }
   }
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    
+    inputRef.current?.focus()
+  }, [open])
 
   return (
     <GenericModal open={open} onClose={() => {}}>
@@ -31,7 +41,7 @@ const LoginForm: React.FC<Props> = ({ open }) => {
           onKeyDown={handleEnter}
           onChange={(e) => setValue(e.target.value)}
           $error={false}
-          autoFocus
+          ref={inputRef}
         />
       </Content>
     </GenericModal>
